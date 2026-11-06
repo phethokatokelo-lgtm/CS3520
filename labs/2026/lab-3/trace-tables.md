@@ -48,7 +48,7 @@
 
 ## Step 4 – every class
 
-Predictions are written in the right-hand column; mark any that Ripes contradicted.
+Predictions are in the section at the end of this file.
 
 | Instruction | Format | imm | op1 mux | op2 mux | alu.res | wb mux / pc mux |
 |---|---|---|---|---|---|---|
@@ -90,3 +90,19 @@ Predictions are written in the right-hand column; mark any that Ripes contradict
 | Q8 | 268435460 |
 | Q9 | 0 |
 | Q10 | 1 |
+
+## Predictions and Ripes check
+
+Expected values for each instruction, checked against the simulator afterwards:
+
+- lui: ALU result = 0x2B000 (176128). The ALU passes the immediate through, so operand 1 shouldn't matter.
+- auipc: ALU operand 1 mux selects the PC, so result = PC + 0 = 0x14 (20).
+- lw: ALU computes a0 + 0 = 0x10000000; write-back mux selects the memory output (42).
+- sw: immediate = 4, ALU result = 0x10000004, RegWrite = 0 so no register is written.
+- beq: t0 != t1, so the branch unit outputs 0 and pc_src stays 0 (PC goes to 0x2C).
+- bne: t0 != t1, so the branch unit outputs 1, pc_src = 1, PC jumps to 0x34 and 0x30 is skipped.
+- jal: ALU computes PC + 12 = 0x40; write-back mux selects PC+4 (0x38) into ra.
+- jalr: ALU computes ra + 0 = 0x38; PC goes back to 0x38.
+- Statistics: 17 instructions retired, 17 cycles, CPI = 1.00.
+
+Result: the Ripes values in the Step 4 table and the Statistics panel (17 cycles, 17 retired, CPI 1) match every item above.
