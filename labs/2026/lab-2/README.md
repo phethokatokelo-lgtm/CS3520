@@ -31,8 +31,6 @@ implement a few simple instructions. `la` needs two real instructions because
 an address is 32 bits but one `addi` immediate only holds 12 bits. `ble` has no
 encoding of its own because swapping the operands of `bge` gives the same test.
 
-(Check this table against the disassembly in Ripes for your own run.)
-
 ## 3. Why does `find_max` save `s1` but not `ra`?
 
 - **`s1` is a callee-saved register.** The calling convention promises the
